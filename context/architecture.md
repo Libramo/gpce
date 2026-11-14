@@ -145,8 +145,18 @@
    failure fallback, not a substitute for the live value.
 8. Both proxy routes (`/api/leaderboard`, `/api/session-info`)
    must support conditional requests (`ETag`/`If-None-Match` →
-   `304`) — this is what makes a 3s poll interval affordable on
-   Vercel's Fast Data Transfer cap, not the interval length itself.
+   `304`) — this is what makes a 4s poll interval (3s until
+   2026-11-14) affordable on Vercel's Fast Data Transfer cap, not
+   the interval length itself.
+9. The upstream side is protected too (2026-11-14), because the
+   mobile app's Neon free tier caps network transfer and every poll
+   used to read the whole table: `/api/leaderboard` keeps a shared
+   in-memory snapshot for 3s (one upstream call per instance however
+   many screens are open, concurrent requests share one fetch), and
+   sends the mobile app's `version` back as `?since=`, which answers
+   `{ unchanged: true }` without rows when nothing changed. Don't
+   remove either, or add a route that reads `/evaluations` on every
+   request.
    `lib/etag.ts` (server) / `lib/etag-fetcher.ts` (client) implement
    this; any new polling route should reuse the same pattern rather
    than re-sending a full payload on every poll. Verified

@@ -63,9 +63,12 @@ const TABS: TabItem[] = [
   },
 ];
 
-const REFRESH_INTERVAL_MS = 3000;
+// 4s (owner, 2026-11-14; was 3s): still reads as live on a projected
+// board, and fewer polls. The server route caches for 3s across all open
+// screens (app/api/leaderboard/route.ts), so a score shows up within ~4-7s.
+const REFRESH_INTERVAL_MS = 4000;
 // Roster changes (a juror added, a project added) are occasional, not
-// continuous like evaluations — no need to hammer /health every 3s.
+// continuous like evaluations — no need to hammer /health every 4s.
 const SESSION_INFO_REFRESH_INTERVAL_MS = 30_000;
 
 export function Dashboard() {

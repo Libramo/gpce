@@ -120,7 +120,7 @@ export function JurorDetailContent({
           onClick={() => setShowRemaining((prev) => !prev)}
           className="flex w-full items-center justify-between text-sm text-muted-foreground"
         >
-          <span>{remainingCodes.length} projet(s) restant(s) à évaluer</span>
+          <span>{remainingCodes.length} dossier(s) restant(s) à évaluer</span>
           <ChevronDown
             className={cn(
               "size-4 transition-transform",
@@ -134,7 +134,7 @@ export function JurorDetailContent({
             <BoardSearch
               value={remainingQuery}
               onChange={setRemainingQuery}
-              placeholder="Rechercher un projet restant…"
+              placeholder="Rechercher un dossier restant…"
             />
             <div className="grid max-h-48 grid-cols-3 gap-2 overflow-y-auto sm:grid-cols-4">
               {filteredRemaining.map((code) => (
@@ -148,7 +148,7 @@ export function JurorDetailContent({
             </div>
             {filteredRemaining.length === 0 && (
               <p className="text-center text-sm text-muted-foreground">
-                Aucun projet trouvé.
+                Aucun dossier trouvé.
               </p>
             )}
           </div>

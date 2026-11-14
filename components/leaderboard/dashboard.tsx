@@ -53,12 +53,12 @@ const TABS: TabItem[] = [
   { id: "jurors", label: "Progression des jurés", icon: <Users size={20} /> },
   {
     id: "projects",
-    label: "Classement des projets",
+    label: "Classement des dossiers",
     icon: <Trophy size={20} />,
   },
   {
     id: "completion",
-    label: "Complétion des projets",
+    label: "Complétion des dossiers",
     icon: <ListChecks size={20} />,
   },
 ];
@@ -142,7 +142,7 @@ export function Dashboard() {
       // First successful load: whatever's already complete is history, not
       // something that just happened. Record it as seen without
       // celebrating — this is exactly what stops a refresh from replaying
-      // a stale "P2 est complet" toast for a completion that may have
+      // a stale "D2 est complet" toast for a completion that may have
       // happened minutes or hours ago.
       for (const p of newlyComplete) celebratedRef.current.add(p.code);
       hasInitializedRef.current = true;

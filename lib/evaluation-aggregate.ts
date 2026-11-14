@@ -21,14 +21,16 @@ export function generateJurorCodes(jurorCount: number): string[] {
   return Array.from({ length: jurorCount }, (_, i) => `J${i + 1}`);
 }
 
-// Real project codes are NOT zero-padded ("P13", "P7", "P200" — confirmed
-// against the live API, 2026-07-16), unlike the mock's original assumption.
+// Real dossier codes are NOT zero-padded ("D13", "D7", "D200"), unlike the
+// mock's original assumption. They were P1..P200 until 2026-11-14, when the
+// mobile app renamed projects to "dossiers"; must match GPCE-app's
+// DOSSIER_CODES (src/lib/codes.ts) or nothing lines up.
 export function generateProjectCodes(projectCount: number): string[] {
-  return Array.from({ length: projectCount }, (_, i) => `P${i + 1}`);
+  return Array.from({ length: projectCount }, (_, i) => `D${i + 1}`);
 }
 
 /** Numeric-aware comparator for project codes — a plain string sort would
- * put "P10" before "P2" (lexicographic), which reads wrong for codes that
+ * put "D10" before "D2" (lexicographic), which reads wrong for codes that
  * aren't zero-padded. */
 export function compareProjectCodes(a: string, b: string): number {
   const numA = Number.parseInt(a.slice(1), 10);

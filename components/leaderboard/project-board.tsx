@@ -47,7 +47,7 @@ export function ProjectBoard({
       <BoardSearch
         value={query}
         onChange={setQuery}
-        placeholder="Rechercher un projet (ex. P042)…"
+        placeholder="Rechercher un dossier (ex. D42)…"
       />
       <AnimatePresence initial={false}>
         {visible.map(({ project, average, rank }) => (
@@ -64,12 +64,12 @@ export function ProjectBoard({
       </AnimatePresence>
       {filtered.length === 0 && (
         <p className="text-center text-sm text-muted-foreground">
-          Aucun projet trouvé.
+          Aucun dossier trouvé.
         </p>
       )}
       {filtered.length > RENDER_LIMIT && (
         <p className="text-center text-xs text-muted-foreground">
-          {filtered.length - RENDER_LIMIT} projet(s) supplémentaire(s) —
+          {filtered.length - RENDER_LIMIT} dossier(s) supplémentaire(s) —
           affinez la recherche pour les voir.
         </p>
       )}

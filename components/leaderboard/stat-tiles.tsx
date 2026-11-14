@@ -5,7 +5,7 @@ export function StatTiles({ stats }: { stats: SessionStats }) {
   return (
     <div className="grid w-full grid-cols-2 gap-4">
       <StatTile value={stats.pacePerMinute} label="évaluations / minute" />
-      <StatTile value={stats.ineligibleCount} label="projets hors critères" />
+      <StatTile value={stats.ineligibleCount} label="dossiers hors critères" />
     </div>
   );
 }

@@ -52,7 +52,7 @@ export function ProjectScoresContent({
       {ineligibleCount > 0 && (
         <p className="text-xs text-muted-foreground">
           {ineligibleCount} juré{ineligibleCount > 1 ? "s" : ""} sur{" "}
-          {evaluations.length} ont jugé ce projet hors critères.
+          {evaluations.length} ont jugé ce dossier hors critères.
         </p>
       )}
     </div>

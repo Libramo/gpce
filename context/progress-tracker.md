@@ -20,12 +20,27 @@ change.
   celebrations fire and the sticky sidebar behave correctly.
   Both polling routes now support ETag/304 conditional requests
   (Vercel bandwidth optimization, see Completed below), verified
-  end-to-end against a running server, not just type-checked.
-  `npx next build` passes as of the last change.
+  end-to-end against a running server, not just type-checked. The
+  dashboard page is now PIN-gated (`proxy.ts` + `/acces`) and has
+  two real logos in the header + a real favicon (see Completed
+  (continued 10)). `npx next build` passes as of the last change.
 
 ## Current Goal
 
-- No active implementation goal. Next session should start by
+- **Not yet deployed — nothing in this session has been committed
+  to git.** `git log` still shows only the original
+  `99d9aad Initial commit from Create Next App`; every file this
+  session touched or created is sitting as uncommitted/untracked
+  changes. Before any real Vercel deployment: (1) commit and push
+  this work, (2) set every `.env.local` var
+  (`EVALUATIONS_API_URL`, `HEALTH_API_URL`,
+  `NEXT_PUBLIC_JUROR_COUNT`, `NEXT_PUBLIC_PROJECT_COUNT`,
+  `DASHBOARD_PIN`) in Vercel's project settings too — `.env.local`
+  is gitignored and never deploys, (3) confirm the PIN flow was
+  actually tested locally (see the note under Completed
+  (continued 9) — not yet confirmed as of this writing), (4)
+  resolve the Vercel Hobby "non-commercial use" ToS question the
+  user said they'd handle separately. Next session should start by
   reading this file's "Next Up" and "Open Questions" sections
   below, which are kept current.
 
@@ -71,9 +86,10 @@ change.
   app**, not here — it already owns the roster as source of truth,
   and this tracker is documented read-only (architecture.md
   invariant #1). Adding a proxied `POST` here would mean reversing
-  that invariant and adding real auth (this dashboard is public/
-  unauthenticated — an unauthenticated write endpoint would let
-  anyone with the URL corrupt the roster). No action needed on this
+  that invariant. Note: the dashboard *page* now sits behind a PIN
+  (see Completed below), but the API routes deliberately don't —
+  an unauthenticated write endpoint would still let anyone with the
+  URL corrupt the roster, PIN or not. No action needed on this
   repo either way: once the mobile app can add jurors/projects, this
   tracker picks them up automatically within 30s via the existing
   `/api/session-info` polling — that's the whole point of having
@@ -227,7 +243,11 @@ change.
   and a render cap (30 rows) applied *after* ranking so a search
   hit still shows its true rank, not its position within the
   filtered subset. `JurorBoard` stays uncapped/unsearched — 12
-  rows fits fine as-is.
+  rows fits fine as-is. **Update:** `CompletionBoard` no longer
+  has the 30-row cap — it renders every dossier (sorted by
+  evaluator count, so all completed ones are listed first);
+  search still filters. `ProjectBoard` likewise dropped its cap
+  and renders all dossiers in rank order.
   `SPOTLIGHT_PROJECT_CODES` (renamed from `DISPLAYED_PROJECT_CODES`)
   still exists in `lib/mock-evaluations.ts` but now means
   something different: which 10 projects the *simulation* biases
@@ -456,6 +476,27 @@ change.
     `/` should redirect to `/acces`; submitting the correct
     `DASHBOARD_PIN` should set the cookie and land on the real
     dashboard; `/api/leaderboard` should stay reachable with no PIN.
+- `npx next build` passes.
+
+## Completed (continued 10)
+
+- **Real branding assets added** — user provided two logo files
+  (`public/icon.png` and `public/logo ANPH.png`, the latter with a
+  space in the filename). Renamed for URL-safety/clarity before
+  use: `public/logo-gpce.png` (the GPCE program's own emblem) and
+  `public/logo-anph.png` (the national disability-inclusion agency
+  logo — wheelchair/ear/cane/brain icons, matches the program's
+  actual subject matter). Both confirmed to have real alpha-channel
+  transparency (checked the PNG header directly, not assumed) before
+  placing them on the dark theme.
+  - `app/page.tsx` header restructured from a plain title/subtitle
+    column into a row: GPCE logo (left) — title block — ANPH logo
+    (right), flanking "Suivi en direct GPCE". Uses `next/image`.
+  - **Favicon**: copied `logo-gpce.png` to `app/icon.png` (Next.js
+    App Router's file-convention favicon — auto-detected, no
+    metadata code needed) and deleted the leftover default
+    `app/favicon.ico` placeholder from create-next-app. Build
+    output confirms `○ /icon.png` is now generated.
 - `npx next build` passes.
 
 ## Open Questions

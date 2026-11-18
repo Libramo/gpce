@@ -8,8 +8,6 @@ import { projectAverage, type ProjectStanding } from "@/lib/leaderboard-types";
 import { BoardSearch } from "./board-search";
 import { LeaderboardBar } from "./leaderboard-bar";
 
-const RENDER_LIMIT = 30;
-
 export function ProjectBoard({
   projects,
   onSelect,
@@ -40,7 +38,6 @@ export function ProjectBoard({
         r.project.code.toLowerCase().includes(query.toLowerCase())
       )
     : ranked;
-  const visible = filtered.slice(0, RENDER_LIMIT);
 
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-3">
@@ -50,7 +47,7 @@ export function ProjectBoard({
         placeholder="Rechercher un dossier (ex. D42)…"
       />
       <AnimatePresence initial={false}>
-        {visible.map(({ project, average, rank }) => (
+        {filtered.map(({ project, average, rank }) => (
           <LeaderboardBar
             key={project.code}
             rank={rank}
@@ -65,12 +62,6 @@ export function ProjectBoard({
       {filtered.length === 0 && (
         <p className="text-center text-sm text-muted-foreground">
           Aucun dossier trouvé.
-        </p>
-      )}
-      {filtered.length > RENDER_LIMIT && (
-        <p className="text-center text-xs text-muted-foreground">
-          {filtered.length - RENDER_LIMIT} dossier(s) supplémentaire(s) —
-          affinez la recherche pour les voir.
         </p>
       )}
     </div>

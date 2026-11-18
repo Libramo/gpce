@@ -69,14 +69,19 @@ these context docs stay in English.
 ### Project Standings Visualization
 
 - Per project: running average of the 20-point criteria
-  totals across jurors who have scored it so far.
+  totals across **every** juror who has evaluated it so far,
+  each ineligible ("hors critères") answer counting as 0/20
+  (owner, 2026-11-18; `averageCountingIneligibleAsZero` in
+  `lib/leaderboard-types.ts`, used by both the ranking and the
+  dossier detail). Until then ineligible answers were excluded,
+  so 1 juror at 17/20 + 11 "hors critères" ranked first at 17.0;
+  now it is (17 + 11×0) / 12 = 1.4.
 - Recalculates and re-ranks live as each new score lands —
   a project can move up or down the moment a juror submits.
-- Ineligible ("No") determinations carry no score and are
-  excluded from a project's average, but are shown as a
-  count/indicator (e.g. "2 jurors marked ineligible") so the
-  room can see that signal without it corrupting the ranking.
-- Projects with zero scores so far are shown as not-yet-ranked
+- The dossier detail lists the ineligible jurors as "Hors
+  critères (0)" and states the count, so the room sees where
+  the zeros come from.
+- Projects nobody has evaluated yet are shown as not-yet-ranked
   rather than a false 0.
 - **Open design question**: with up to 200 projects, a single
   flat leaderboard of horizontal bars does not scale visually
@@ -123,8 +128,8 @@ these context docs stay in English.
 1. The dashboard reflects a new evaluation submitted on the
    mobile app within a few seconds, with no manual refresh.
 2. The project standings leaderboard correctly recalculates
-   and re-ranks as running averages change, excluding
-   ineligible determinations from the average.
+   and re-ranks as running averages change, counting each
+   ineligible determination as 0/20 in the average.
 3. The juror completion leaderboard correctly counts an
    ineligible determination as done.
 4. Leaderboard re-ordering and new entries animate smoothly

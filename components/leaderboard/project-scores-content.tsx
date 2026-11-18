@@ -2,21 +2,25 @@
 
 import type { Evaluation } from "@/lib/evaluation-types";
 import { scoreTotal } from "@/lib/evaluation-aggregate";
+import { averageCountingIneligibleAsZero } from "@/lib/leaderboard-types";
 
 export function ProjectScoresContent({
   evaluations,
 }: {
   evaluations: Evaluation[];
 }) {
-  const scored = evaluations.filter((e) => e.meetsCriteria);
-  const ineligibleCount = evaluations.length - scored.length;
-  const average =
-    scored.length > 0
-      ? scored.reduce((sum, e) => sum + (scoreTotal(e) ?? 0), 0) / scored.length
-      : null;
+  // Same rule as the ranking (lib/leaderboard-types.ts): "hors critères"
+  // counts as 0/20, so the average here always matches the board.
+  const totals = evaluations
+    .map(scoreTotal)
+    .filter((total): total is number => total !== null);
+  const ineligibleCount = evaluations.length - totals.length;
+  const average = averageCountingIneligibleAsZero(totals, ineligibleCount);
 
-  const sorted = [...scored].sort(
-    (a, b) => (scoreTotal(b) ?? 0) - (scoreTotal(a) ?? 0)
+  // Scored jurors first (highest first), then the "hors critères" ones,
+  // listed too so the room can see where the zeros in the average come from.
+  const sorted = [...evaluations].sort(
+    (a, b) => (scoreTotal(b) ?? -1) - (scoreTotal(a) ?? -1)
   );
 
   return (
@@ -38,7 +42,9 @@ export function ProjectScoresContent({
               {evaluation.jurorCode}
             </span>
             <span className="tabular-nums text-muted-foreground">
-              {scoreTotal(evaluation)}/20
+              {scoreTotal(evaluation) !== null
+                ? `${scoreTotal(evaluation)}/20`
+                : "Hors critères (0)"}
             </span>
           </div>
         ))}
@@ -52,7 +58,8 @@ export function ProjectScoresContent({
       {ineligibleCount > 0 && (
         <p className="text-xs text-muted-foreground">
           {ineligibleCount} juré{ineligibleCount > 1 ? "s" : ""} sur{" "}
-          {evaluations.length} ont jugé ce dossier hors critères.
+          {evaluations.length} ont jugé ce dossier hors critères (compté
+          0/20 dans la moyenne).
         </p>
       )}
     </div>
